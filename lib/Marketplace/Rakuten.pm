@@ -1,12 +1,15 @@
 package Marketplace::Rakuten;
 
-use 5.006;
 use strict;
-use warnings FATAL => 'all';
+use warnings;
+
+use Moo;
+use MooX::Types::MooseLike::Base qw(Str);
+use namespace::clean;
 
 =head1 NAME
 
-Marketplace::Rakuten - The great new Marketplace::Rakuten!
+Marketplace::Rakuten - Interface to http://webservice.rakuten.de/documentation
 
 =head1 VERSION
 
@@ -19,35 +22,33 @@ our $VERSION = '0.01';
 
 =head1 SYNOPSIS
 
-Quick summary of what the module does.
-
-Perhaps a little code snippet.
-
     use Marketplace::Rakuten;
+    my $rakuten = Marketplace::Rakuten->new(key => 'xxxxxxx',
+                                            endpoint => 'http://webservice.rakuten.de/merchants/'
+                                            );
+    my $res = $rakuten->get_key_info;
 
-    my $foo = Marketplace::Rakuten->new();
-    ...
+=head1 ACCESSORS
 
-=head1 EXPORT
+=head2 key
 
-A list of functions that can be exported.  You can delete this section
-if you don't export anything, such as for a purely object-oriented module.
+The API key (required).
 
-=head1 SUBROUTINES/METHODS
+=head2 endpoint
 
-=head2 function1
+The URL of the endpoint. Default to http://webservice.rakuten.de/merchants/
 
-=cut
-
-sub function1 {
-}
-
-=head2 function2
+If you need a specific api version, it could be something like http://webservice.rakuten.de/v2.05/merchants
 
 =cut
 
-sub function2 {
-}
+has key => (is => 'ro',
+            required => 1,
+            isa => Str);
+
+has endpoint => (is => 'ro',
+                 default => sub { 'http://webservice.rakuten.de/merchants/' });
+
 
 =head1 AUTHOR
 
