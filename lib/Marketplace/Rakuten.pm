@@ -5,6 +5,8 @@ use warnings;
 
 use Moo;
 use MooX::Types::MooseLike::Base qw(Str);
+use HTTP::Tiny;
+use Marketplace::Rakuten::Response;
 use namespace::clean;
 
 =head1 NAME
@@ -40,6 +42,10 @@ The URL of the endpoint. Default to http://webservice.rakuten.de/merchants/
 
 If you need a specific api version, it could be something like http://webservice.rakuten.de/v2.05/merchants
 
+=head2 ua
+
+The user-agent. Built lazily.
+
 =cut
 
 has key => (is => 'ro',
@@ -48,6 +54,74 @@ has key => (is => 'ro',
 
 has endpoint => (is => 'ro',
                  default => sub { 'http://webservice.rakuten.de/merchants/' });
+
+has ua => (is => 'lazy');
+
+sub _build_ua {
+    return HTTP::Tiny->new;
+}
+
+
+=head1 METHODS
+
+=head2 api_call($method, $call, $data);
+
+Generic method to do any call. The first argument is the HTTP request
+method (get or post). The second argument is the path of the api, e.g.
+(C<misc/getKeyInfo>). The third is the structure to send (an hashref).
+
+Return a Marketplace::Rakuten::Response object.
+
+The key is injected into the data hashref in any case.
+
+=head2 API CALLS
+
+=over 4
+
+=item  get_key_info
+
+=item add_product(\%data)
+
+=back
+
+=cut
+
+sub api_call {
+    my ($self, $method, $call, $data) = @_;
+    die "Missing method argument" unless $method;
+    die "Missing call name" unless $call;
+
+    # populate the data and inject the key
+    $data ||= {};
+    $data->{key} = $self->key;
+
+
+    my $ua = $self->ua;
+    my $url = $self->endpoint;
+    $url =~ s/\/$//;
+    $call =~ s/^\///;
+    $url .= '/' . $call;
+
+    my $response;
+    $method = lc($method);
+
+    if ($method eq 'get') {
+        my $params = $ua->www_form_urlencode($data);
+        $url .= '?' . $params;
+        $response = $ua->get($url);
+    }
+    elsif ($method eq 'post') {
+        $response = $ua->post_form($url, $data);
+    }
+    else {
+        die "Unsupported method $method";
+    }
+    die "HTTP::Tiny failed to provide a response!" unless $response;
+    return Marketplace::Rakuten::Response->new(%$response);
+}
+
+sub get_key_info { shift->api_call(get  => 'misc/getKeyInfo') }
+sub add_product  { shift->api_call(post => 'products/addProduct', shift) }
 
 
 =head1 AUTHOR
