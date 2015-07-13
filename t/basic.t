@@ -2,7 +2,7 @@
 
 use strict;
 use warnings;
-use Test::More tests => 10;
+use Test::More tests => 13;
 use Data::Dumper;
 
 use_ok('Marketplace::Rakuten::Response');
@@ -21,6 +21,7 @@ is $rakuten->endpoint, 'http://webservice.rakuten.de/merchants/';
     my $res = $rakuten->get_key_info;
     ok ($res->is_success, "Request is success");
     ok ($res->content, "Content ok");
+    ok ($res->data, "Found data") and diag Dumper($res->data);
     # print Dumper($res);
 }
 
@@ -32,6 +33,7 @@ is $rakuten->endpoint, 'http://webservice.rakuten.de/merchants/';
                                     });
     ok ($res->is_success, "Adding a product works");
     ok ($res->content, "Content ok");
+    ok ($res->data, "Found data") and diag Dumper($res->data);
     # print Dumper($res);
 }
 
@@ -42,6 +44,7 @@ is $rakuten->endpoint, 'http://webservice.rakuten.de/merchants/';
                                     });
     ok (!$res->is_success, "Adding a product without price doesn't work");
     ok ($res->content, "Content ok");
+    ok ($res->data, "Found data") and diag Dumper($res->data);
     # print Dumper($res);
 }
 

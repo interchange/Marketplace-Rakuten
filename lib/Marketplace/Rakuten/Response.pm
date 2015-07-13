@@ -5,6 +5,7 @@ use warnings;
 
 use Moo;
 use MooX::Types::MooseLike::Base qw(Str Bool HashRef);
+use XML::LibXML::Simple qw/XMLin/;
 use namespace::clean;
 
 =head1 NAME
@@ -47,6 +48,10 @@ A hashref of header fields. All header field names will be normalized
 to be lower case. If a header is repeated, the value will be an
 arrayref; it will otherwise be a scalar string containing the value
 
+=head2 data
+
+The parsed data from xml, if any.
+
 =cut
 
 has success => (is => 'ro', isa => Bool);
@@ -56,21 +61,30 @@ has reason  => (is => 'ro', isa => Str);
 has content => (is => 'ro', isa => Str);
 has headers => (is => 'ro', isa => HashRef);
 
+has data => (is => 'lazy');
+sub _build_data {
+    my $self = shift;
+    my $data;
+    if (my $xml = $self->content) {
+        eval { $data = XMLin($xml, ForceArray => [ 'errors' ]) };
+        warn "Faulty xml! $@" . $xml if $@;
+    }
+    return $data;
+}
+
 =head1 METHODS
 
 =head2 is_success
 
 Alias for C<success>
 
-=head2 struct
-
-
-
 =cut
 
 sub is_success {
     return shift->success;
 }
+
+
 
 
 1;
