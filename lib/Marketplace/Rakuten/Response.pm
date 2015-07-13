@@ -6,6 +6,7 @@ use warnings;
 use Moo;
 use MooX::Types::MooseLike::Base qw(Str Bool HashRef);
 use XML::LibXML::Simple qw/XMLin/;
+use Data::Dumper;
 use namespace::clean;
 
 =head1 NAME
@@ -76,15 +77,43 @@ sub _build_data {
 
 =head2 is_success
 
-Alias for C<success>
+Check that the http status is ok and that there are no errors.
 
 =cut
 
 sub is_success {
-    return shift->success;
+    my $self = shift;
+    if ($self->success && !$self->errors) {
+        return 1;
+    }
+    return 0;
 }
 
+=head2 errors
 
+Return, if any, a list of hashrefs with errors. The I<expected> keys
+of each element are: C<code> C<error> C<help>
 
+http://webservice.rakuten.de/documentation/howto/error
+
+In a scalar context, return an arrayref of error. In list contest,
+return a list.
+
+If there is no error, return undef.
+
+=cut
+
+sub errors {
+    my $self = shift;
+    if (my $errors = $self->data->{errors}) {
+        if (my $error = $errors->{error}) {
+            wantarray ? return @$error : return $error;
+        }
+        else {
+            die "Unexpected error content!" . Dumper($errors);
+        }
+    }
+    return undef;
+}
 
 1;
