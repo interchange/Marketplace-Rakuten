@@ -238,6 +238,65 @@ sub add_product_attribute {
 # shop_category_id, leaving it out for now.
 
 
+=head3 Product editing
+
+The following methods require and id passed (sku or id) and work the
+same as for product adding, but no argument is mandatory.
+
+They all return just a structure with a boolean success (-1 is
+failure, 1 is success).
+
+=over 4
+
+=item edit_product(\%data)
+
+Requires C<product_id> or C<product_art_no>
+
+=item edit_product_variant(\%data);
+
+Requires C<variant_id> or C<variant_art_no>
+
+=item edit_product_variant_definition(\%data)
+
+Requires C<product_id> or C<product_art_no>
+
+=item edit_product_multi_variant(\%data);
+
+Requires C<variant_id> or C<variant_art_no>
+
+=item edit_product_attribute
+
+Requires C<attribute_id>, C<title>, C<value>
+
+=back
+
+=cut
+
+sub edit_product {
+    my ($self, $data) = @_;
+    $self->api_call(post => 'products/editProduct', $data);
+}
+
+sub edit_product_variant {
+    my ($self, $data) = @_;
+    $self->api_call(post => 'products/editProductVariant', $data);
+}
+
+sub edit_product_variant_definition {
+    my ($self, $data) = @_;
+    $self->api_call(post => 'products/editProductVariantDefinition', $data);
+}
+
+sub edit_product_multi_variant {
+    my ($self, $data) = @_;
+    $self->api_call(post => 'products/editProductMultiVariant', $data);
+}
+
+sub edit_product_attribute {
+    my ($self, $data) = @_;
+    $self->api_call(post => 'products/editProductAttribute', $data);
+}
+
 
 
 =head1 AUTHOR

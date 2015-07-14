@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 use utf8;
-use Test::More tests => 44;
+use Test::More tests => 63;
 use Data::Dumper;
 
 use_ok('Marketplace::Rakuten::Response');
@@ -83,6 +83,31 @@ test_success(add_product_attribute => {
                                        value => 'The value of the attribute',
                                       }, 'attribute_id');
 
+test_success(edit_product => {
+                              product_art_no => 'SKU00001',
+                              description => 'edited',
+                             }, 'success');
+
+test_success(edit_product_variant => {
+                                      variant_art_no => 'SKU00001-Big-Blue',
+                                      description => 'edited',
+                                     }, 'success');
+
+test_success(edit_product_variant_definition => {
+                                                 product_art_no => 'SKU00001',
+                                                 variant_1 => 'Coolor',
+                                                });
+
+test_success(edit_product_multi_variant => {
+                                            variant_art_no => 'SKU00001-Big-Blue',
+                                            description => 'edited',
+                                           }, 'success');
+
+test_success(edit_product_attribute => {
+                                        attribute_id => '1',
+                                        title => 'An attribute',
+                                        value => 'The value of the attribute',
+                                       }, 'success');
 
 
 
