@@ -4,7 +4,7 @@ use strict;
 use warnings;
 use utf8;
 use Data::Dumper;
-use Test::More tests => 5;
+use Test::More tests => 4;
 
 use Marketplace::Rakuten::Response;
 
@@ -49,8 +49,8 @@ is_deeply($res->data,
           'success' => '-1'
           }, "Data parsed ok");
 
-my @errors = $res->errors;
-is_deeply(\@errors, [
+my $errors = $res->errors;
+is_deeply($errors, [
                      {
                       'help' => 'http://www.google.de',
                       'message' => "Der ben\x{f6}tigte Parameter \"name\" konnte nicht gefunden werden",
@@ -94,8 +94,8 @@ is_deeply($res->data,
           'success' => '-1'
           }, "Data parsed ok with array forced");
 
-@errors = $res->errors;
-is_deeply(\@errors, [
+$errors = $res->errors;
+is_deeply($errors, [
                      {
                       'help' => 'http://www.google.de',
                       'message' => "Der ben\x{f6}tigte Parameter \"name\" konnte nicht gefunden werden",
@@ -103,5 +103,3 @@ is_deeply(\@errors, [
                      },
                     ], "Errors ok");
 
-my $errors = $res->errors;
-is_deeply($errors, \@errors, "in scalar contest, return an arrayref");

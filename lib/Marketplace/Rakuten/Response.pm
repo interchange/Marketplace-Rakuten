@@ -96,10 +96,8 @@ of each element are: C<code> C<error> C<help>
 
 http://webservice.rakuten.de/documentation/howto/error
 
-In a scalar context, return an arrayref of error. In list contest,
-return a list.
-
-If there is no error, return undef.
+Return an arrayref of error, if any. If there is no error, return
+undef.
 
 =cut
 
@@ -107,7 +105,7 @@ sub errors {
     my $self = shift;
     if (my $errors = $self->data->{errors}) {
         if (my $error = $errors->{error}) {
-            wantarray ? return @$error : return $error;
+            return $error;
         }
         else {
             die "Unexpected error content!" . Dumper($errors);
