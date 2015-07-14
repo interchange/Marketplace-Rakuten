@@ -76,9 +76,17 @@ The key is injected into the data hashref in any case.
 
 =head2 API CALLS
 
+=head3 Miscellaneous
+
 =over 4
 
 =item  get_key_info
+
+=back
+
+=head3 Product creation
+
+=over 4
 
 =item add_product(\%data)
 
@@ -110,6 +118,8 @@ Return hashref: C<variant_id>
 
 =item add_product_variant_definition
 
+L<http://webservice.rakuten.de/documentation/method/add_product_variant>
+
 Mandatory params: C<product_art_no> (the sku) or C<product_id>
 
 Recommended: C<variant_1> Size C<variant_2> Color
@@ -117,6 +127,8 @@ Recommended: C<variant_1> Size C<variant_2> Color
 Return hashref: C<attribute_id>
 
 =item add_product_multi_variant
+
+L<http://webservice.rakuten.de/documentation/method/add_product_multi_variant>
 
 Mandatory params: C<product_art_no> (the sku) or C<product_id>, C<variation1_type>, C<variation1_value>, C<price>
 
@@ -126,13 +138,19 @@ Return hashref: C<variant_id>
 
 =item add_product_link
 
-Mandatory params: C<product_art_no> (the sku) or C<product_id>, C<name> (100 chars), C<url> (255 chars)
+L<http://webservice.rakuten.de/documentation/method/add_product_link>
+
+Mandatory params: C<product_art_no> (the sku) or C<product_id>,
+C<name> (100 chars), C<url> (255 chars)
 
 Return hashref: C<link_id>
 
 =item add_product_attribute
 
-Mandatory params: C<product_art_no> (the sku) or C<product_id>, C<title> (50 chars), C<value>
+L<http://webservice.rakuten.de/documentation/method/add_product_attribute>
+
+Mandatory params: C<product_art_no> (the sku) or C<product_id>,
+C<title> (50 chars), C<value>
 
 Return hashref: C<attribute_id>
 
