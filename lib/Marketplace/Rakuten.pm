@@ -431,6 +431,67 @@ sub _parse_orders {
     return @out;
 }
 
+
+=item set_order_shipped(\%params)
+
+Required parameter: order_no (the rakuten's order number).
+
+Accepted parameters:
+
+=over 4 
+
+=item dhl (boolean, true if Rakuten-DHL-Rahmenvertrag is used)
+
+=item carrier
+
+=item tracking_number
+
+=item tracking_url
+
+=back
+
+=cut
+
+sub set_order_shipped {
+    my ($self, $data) = @_;
+    $self->api_call(post => 'orders/setOrderShipped', $data);
+}
+
+=item set_order_cancelled(\%params)
+
+Required paramater: C<order_no> (rakuten's order number)
+
+Optional: C<comment>
+
+=cut
+
+sub set_order_cancelled {
+    my ($self, $data) = @_;
+    $self->api_call(post => 'orders/setOrderCancelled', $data);
+}
+
+=item set_order_returned(\%params)
+
+Required paramater: C<order_no> (rakuten's order number) and C<type>
+(C<fully> or C<partly>):
+
+L<http://webservice.rakuten.de/documentation/method/set_order_returned>
+
+=cut
+
+
+sub set_order_returned {
+    my ($self, $data) = @_;
+    $self->api_call(post => 'orders/setOrderReturned', $data);
+}
+
+=cut
+
+
+=back
+
+=cut
+
 =head1 AUTHOR
 
 Marco Pessotto, C<< <melmothx at gmail.com> >>

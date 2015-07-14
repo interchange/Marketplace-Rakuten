@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 use utf8;
-use Test::More tests => 88;
+use Test::More tests => 96;
 use Data::Dumper;
 
 use_ok('Marketplace::Rakuten::Response');
@@ -130,6 +130,23 @@ test_success(delete_product_attribute => {
                                        }, 'success');
 
 test_success(get_orders => {} => 'success', sub { print Dumper(shift) });
+
+test_success(set_order_shipped => {
+                                   order_no => '111-222-333',
+                                   carrier => 'TNT',
+                                   tracking_number => '12341234',
+                                  }, 'success');
+
+test_success(set_order_cancelled => {
+                                     order_no => '111-222-333',
+                                     comment => 'False alarm',
+                                  }, 'success');
+# out of order, apparently
+# test_success(set_order_returned => {
+#                                     order_no => '111-222-333',
+#                                     type => 'partly',
+#                                   }, 'success');
+# 
 
 
 # test_failure(add_product_image => {}) # sandbox always return success
