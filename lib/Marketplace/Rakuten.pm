@@ -297,6 +297,61 @@ sub edit_product_attribute {
     $self->api_call(post => 'products/editProductAttribute', $data);
 }
 
+=head3 Product deletion
+
+The following methods require just an id or sku. Return a boolean success.
+
+=over 4
+
+=item delete_product(\%data)
+
+Requires C<product_id> or C<product_art_no>
+
+=item delete_product_variant(\%data);
+
+Requires C<variant_id> or C<variant_art_no>
+
+=item delete_product_image(\%data)
+
+Requires C<image_id> (returned by add_product_image).
+
+=item delete_product_link(\%data);
+
+Requires C<link_id> (returned by add_product_link).
+
+=item delete_product_attribute
+
+Requires C<attribute_id> (returned by add_product_attribute).
+
+=back
+
+=cut
+
+sub delete_product {
+    my ($self, $data) = @_;
+    $self->api_call(post => 'products/deleteProduct', $data);
+}
+
+sub delete_product_variant {
+    my ($self, $data) = @_;
+    $self->api_call(post => 'products/deleteProductVariant', $data);
+}
+
+sub delete_product_image {
+    my ($self, $data) = @_;
+    $self->api_call(post => 'products/deleteProductImage', $data);
+}
+
+sub delete_product_link {
+    my ($self, $data) = @_;
+    $self->api_call(post => 'products/deleteProductLink', $data);
+}
+
+sub delete_product_attribute {
+    my ($self, $data) = @_;
+    $self->api_call(post => 'products/deleteProductAttribute', $data);
+}
+
 
 
 =head1 AUTHOR
