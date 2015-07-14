@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 use utf8;
-use Test::More tests => 83;
+use Test::More tests => 88;
 use Data::Dumper;
 
 use_ok('Marketplace::Rakuten::Response');
