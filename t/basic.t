@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 use utf8;
-use Test::More tests => 96;
+use Test::More tests => 115;
 use Data::Dumper;
 
 use_ok('Marketplace::Rakuten::Response');
@@ -148,6 +148,15 @@ test_success(set_order_cancelled => {
 #                                   }, 'success');
 # 
 
+test_success(get_shop_categories => {});
+test_success(add_shop_category => { name => 'Test' }, 'shop_category_id');
+test_success(edit_shop_category => { shop_category_id => 1, name => 'Test2' },
+             'success');
+test_success(delete_shop_category => { shop_category_id => 1 }, 'success');
+test_success(add_product_to_shop_category => {
+                                              shop_category_id => 1,
+                                              product_art_no => 'SKU000001',
+                                             }, 'success');
 
 # test_failure(add_product_image => {}) # sandbox always return success
 

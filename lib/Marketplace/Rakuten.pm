@@ -477,6 +477,8 @@ Required paramater: C<order_no> (rakuten's order number) and C<type>
 
 L<http://webservice.rakuten.de/documentation/method/set_order_returned>
 
+=back
+
 =cut
 
 
@@ -485,12 +487,71 @@ sub set_order_returned {
     $self->api_call(post => 'orders/setOrderReturned', $data);
 }
 
-=cut
+=head3 Category management
 
+=over 4
+
+=item add_shop_category(\%params)
+
+Required parameter: C<name>
+
+L<http://webservice.rakuten.de/documentation/method/add_shop_category>
+
+Returned: C<shop_category_id>
+
+=item edit_shop_category(\%params)
+
+Required parameter C<shop_category_id> or C<external_shop_category_id>
+
+L<http://webservice.rakuten.de/documentation/method/edit_shop_category>
+
+=item get_shop_categories
+
+No mandatory parameter.
+
+L<http://webservice.rakuten.de/documentation/method/get_shop_categories>
+
+=item delete_shop_category
+
+Required parameter C<shop_category_id> or C<external_shop_category_id>
+
+L<http://webservice.rakuten.de/documentation/method/delete_shop_category>
+
+=item add_product_to_shop_category
+
+Required parameters: C<shop_category_id> or C<external_shop_category_id>,
+  C<product_id> or C<product_art_no> (Rakuten's id or our sku).
+
+L<http://webservice.rakuten.de/documentation/method/add_product_to_shop_category>
 
 =back
 
 =cut
+
+sub add_shop_category {
+    my ($self, $data) = @_;
+    $self->api_call(post => 'categories/addShopCategory', $data);
+}
+
+sub edit_shop_category {
+    my ($self, $data) = @_;
+    $self->api_call(post => 'categories/editShopCategory', $data);
+}
+
+sub get_shop_categories {
+    my ($self, $data) = @_;
+    $self->api_call(get => 'categories/getShopCategories', $data);
+}
+
+sub delete_shop_category {
+    my ($self, $data) = @_;
+    $self->api_call(post => 'categories/deleteShopCategory', $data);
+}
+
+sub add_product_to_shop_category {
+    my ($self, $data) = @_;
+    $self->api_call(post => 'products/addProductToShopCategory', $data);
+}
 
 =head1 AUTHOR
 
