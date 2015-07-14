@@ -109,5 +109,25 @@ sub remote_shop_order_id {
     return shift->order->{order_no};
 }
 
+has shipping_address => (is => 'lazy');
+
+sub _build_shipping_address {
+    my $self = shift;
+    my $address = $self->order->{delivery_address};
+    my $billing = $self->order->{client};
+    my %args;
+    if ($address) {
+        %args = %$address;
+        # populate the object with billing data as well
+        if ($billing) {
+            foreach my $k (qw/client_id email phone/) {
+                $args{$k} = $billing->{$k};
+            }
+        }
+        return Marketplace::Rakuten::Order::Address->new(%args);
+    }
+    return;
+}
+
 
 1;
