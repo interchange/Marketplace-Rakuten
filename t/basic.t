@@ -2,7 +2,7 @@
 
 use strict;
 use warnings;
-use Test::More tests => 13;
+use Test::More tests => 14;
 use Data::Dumper;
 
 use_ok('Marketplace::Rakuten::Response');
@@ -17,34 +17,38 @@ ok $rakuten->key;
 
 is $rakuten->endpoint, 'http://webservice.rakuten.de/merchants/';
 
-{
-    my $res = $rakuten->get_key_info;
-    ok ($res->is_success, "Request is success");
-    ok ($res->content, "Content ok");
-    ok ($res->data, "Found data") and diag Dumper($res->data);
-    # print Dumper($res);
+test_success('get_key_info');
+test_success(add_product => {
+                             name => 'test',
+                             price => '10.00',
+                             description => 'a test product',
+                            });
+test_failure(add_product => {
+                             name => 'test',
+                             description => 'a test product',
+                            });
+
+sub test_success {
+    my ($call, $arg, $sub) = @_;
+    diag "Calling $call with " . Dumper($arg);
+    my $res = $rakuten->$call($arg);
+    ok ($res->is_success, "$call with is OK");
+    ok ($res->content, "$call content ok");
+    ok ($res->data, "$call data ok") and diag Dumper($res->data);
+    if ($sub) {
+        ok($sub->($res), "Callback test on $call success");
+    }
 }
 
-{
-    my $res = $rakuten->add_product({
-                                     name => 'test',
-                                     price => '10.00',
-                                     description => 'a test product',
-                                    });
-    ok ($res->is_success, "Adding a product works");
-    ok ($res->content, "Content ok");
-    ok ($res->data, "Found data") and diag Dumper($res->data);
-    # print Dumper($res);
+sub test_failure {
+    my ($call, $arg, $sub) = @_;
+    diag "Calling $call with " . Dumper($arg);
+    my $res = $rakuten->$call($arg);
+    ok (!$res->is_success, "$call is a falure");
+    ok ($res->errors, "Found errors") and diag Dumper($res->errors);
+    ok ($res->content, "$call content ok");
+    ok ($res->data, "$call data ok") and diag Dumper($res->data);
+    if ($sub) {
+        ok($sub->($res), "Callback test on $call success");
+    }
 }
-
-{
-    my $res = $rakuten->add_product({
-                                     name => 'test',
-                                     description => 'a test product',
-                                    });
-    ok (!$res->is_success, "Adding a product without price doesn't work");
-    ok ($res->content, "Content ok");
-    ok ($res->data, "Found data") and diag Dumper($res->data);
-    # print Dumper($res);
-}
-
