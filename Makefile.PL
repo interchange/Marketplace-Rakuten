@@ -23,6 +23,8 @@ WriteMakefile(
         'MooX::Types::MooseLike' => 0,
         'HTTP::Tiny' => 0,
         'XML::LibXML::Simple' => 0,
+        'DateTime' => 0,
+        'DateTime::Format::ISO8601' => 0,
     },
     dist  => { COMPRESS => 'gzip -9f', SUFFIX => 'gz', },
     clean => { FILES => 'Marketplace-Rakuten-*' },

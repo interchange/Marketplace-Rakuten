@@ -3,14 +3,20 @@ package Marketplace::Rakuten::Order;
 use strict;
 use warnings;
 use Data::Dumper;
+use DateTime;
+use DateTime::Format::ISO8601;
 
 use Moo;
 use MooX::Types::MooseLike::Base qw(Str HashRef Int Object);
 use Marketplace::Rakuten::Order::Address;
 use Marketplace::Rakuten::Order::Item;
+
+
 use namespace::clean;
 
 =head1 NAME
+
+=encoding utf8
 
 Marketplace::Rakuten::Order
 
@@ -127,6 +133,136 @@ sub _build_shipping_address {
         return Marketplace::Rakuten::Order::Address->new(%args);
     }
     return;
+}
+
+has billing_address => (is => 'lazy');
+
+sub _build_billing_address {
+    my $self = shift;
+    my $billing = $self->order->{client};
+    if ($billing) {
+        return Marketplace::Rakuten::Order::Address->new(%$billing);
+    }
+    return undef;
+}
+
+has items_ref => (is => 'lazy');
+
+sub _build_items_ref {
+    my ($self) = @_;
+    my @items;
+    my $order_num = $self->remote_shop_order_id;
+    if ($self->order->{items}) {
+        if (my $item = $self->order->{items}->{item}) {
+            if (ref($item) eq 'HASH') {
+                push @items,
+                  Marketplace::Rakuten::Order::Item
+                    ->new(struct => $item,
+                          order_number => $order_num,
+                         );
+            }
+            elsif (ref($item) eq 'ARRAY') {
+                foreach my $i (@$item) {
+                    push @items,
+                      Marketplace::Rakuten::Order::Item
+                        ->new(struct => $i,
+                              order_number => $order_num,
+                             );
+                }
+            }
+            else {
+                die "Unexpected orderline" . Dumper($item);
+            }
+        }
+    }
+    return \@items;
+}
+
+sub items {
+    return @{ shift->items_ref };
+}
+
+has number_of_items => (is => 'lazy', isa => Int);
+
+sub _build_number_of_items {
+    my $self = shift;
+    my @items = $self->items;
+    my $total = 0;
+    foreach my $i (@items) {
+        $total += $i->quantity;
+    }
+    return $total;
+}
+
+sub email {
+    return shift->billing_address->email;
+}
+
+sub first_name {
+    return shift->billing_address->first_name;
+}
+
+sub last_name {
+    return shift->billing_address->last_name;
+}
+
+sub comments {
+    return shift->order->{comment_client};
+}
+
+sub order_date {
+    my $self = shift;
+    if (my $date = $self->order->{created}) {
+        $date =~ s/ /T/; # eh
+        return DateTime::Format::ISO8601->parse_datetime($date);
+    }
+    return;
+
+}
+
+sub shipping_method {
+    return;
+}
+
+sub shipping_cost {
+    return shift->order->{shipping} || 0;
+}
+
+sub subtotal {
+    my $self = shift;
+    # coupons are not handled yet
+    my $subtotal = $self->total_cost - $self->shipping_cost;
+    return sprintf('%.2f', $subtotal);
+}
+
+sub total_cost {
+    return shift->order->{total} || 0;
+}
+
+=head2 payment_method
+
+Mapping:
+
+
+  PP 	= 	Vorauskasse
+  CC 	= 	Kreditkarte
+  ELV 	= 	Lastschrift
+  ELV-AT 	= 	Lastschrift Österreich
+  SUE 	= 	Sofortüberweisung
+  CB 	= 	ClickAndBuy
+  INV 	= 	Rechnung
+  INV-AT 	= 	Rechnung Österreich
+  PAL 	= 	Paypal
+  GP 	= 	giropay
+  KLA 	= 	Klarna
+  MPA 	= 	mpass
+  BAR 	= 	Barzahlen
+  YAP 	= 	YAPITAL
+
+=cut
+
+sub payment_method {
+    return shift->order->{payment};
 }
 
 
