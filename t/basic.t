@@ -2,7 +2,8 @@
 
 use strict;
 use warnings;
-use Test::More tests => 14;
+use utf8;
+use Test::More tests => 44;
 use Data::Dumper;
 
 use_ok('Marketplace::Rakuten::Response');
@@ -22,19 +23,81 @@ test_success(add_product => {
                              name => 'test',
                              price => '10.00',
                              description => 'a test product',
-                            });
+                             product_art_no => 'SKU00001',
+                            }, 'product_id');
+
 test_failure(add_product => {
                              name => 'test',
                              description => 'a test product',
                             });
+test_success(add_product_image => {
+                                   product_art_no => 'SKU00001',
+                                  });
+
+test_success(add_product_image => {
+                                   product_art_no => 'SKU00001',
+                                   url => 'http://my_image/prova.png'
+                                  }, 'image_id');
+
+
+test_failure(add_product_variant => {
+                                     product_id => '1',
+                                    });
+
+test_success(add_product_variant => {
+                                     product_art_no => 'SKU00001',
+                                     variant_art_no => 'SKU00001-Blue',
+                                     label => 'Color',
+                                     name => 'Blue',
+                                     price => '10.05',
+                                    }, 'variant_id');
+
+
+
+# here it looks like the sandbox return a success => 0 which is not documented.
+test_success(add_product_variant_definition => {
+                                                product_id => '1',
+                                                variant_1 => 'Farbe',
+                                                variant_2 => 'Size',
+                                               });
+
+test_success(add_product_multi_variant => {
+                                           product_art_no => 'SKU00001',
+                                           variant_art_no => 'SKU00001-Blue-Big',
+                                           variation1_type => 'Farbe',
+                                           variation1_value => 'Blue',
+                                           variation2_type => 'Size',
+                                           variation2_value => 'Big',
+                                           price => '10.05',
+                                          });
+
+test_success(add_product_link => {
+                                  product_art_no => 'SKU00001',
+                                  name => 'My product',
+                                  url => 'http://example.org/my-product',
+                                 }, 'link_id');
+
+test_success(add_product_attribute => {
+                                       product_art_no => 'SKU00001',
+                                       title => 'An attribute',
+                                       value => 'The value of the attribute',
+                                      }, 'attribute_id');
+
+
+
+
+# test_failure(add_product_image => {}) # sandbox always return success
 
 sub test_success {
-    my ($call, $arg, $sub) = @_;
+    my ($call, $arg, $expected_data, $sub) = @_;
     diag "Calling $call with " . Dumper($arg);
     my $res = $rakuten->$call($arg);
     ok ($res->is_success, "$call with is OK");
     ok ($res->content, "$call content ok");
     ok ($res->data, "$call data ok") and diag Dumper($res->data);
+    if ($expected_data) {
+        ok($res->data->{$expected_data}, "Found $expected_data in data");
+    }
     if ($sub) {
         ok($sub->($res), "Callback test on $call success");
     }

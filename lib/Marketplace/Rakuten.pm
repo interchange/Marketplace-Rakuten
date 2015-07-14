@@ -82,6 +82,60 @@ The key is injected into the data hashref in any case.
 
 =item add_product(\%data)
 
+L<http://webservice.rakuten.de/documentation/method/add_product>
+
+Mandatory params: C<name>, C<price>, C<description>
+
+Recommended: C<product_art_no> (the sku)
+
+Return hashref: C<product_id>
+
+=item add_product_image(\%data)
+
+L<http://webservice.rakuten.de/documentation/method/add_product_image>
+
+Mandatory params: C<product_art_no> (the sku) or C<product_id>
+(rakuten id).
+
+Return hashref: C<image_id>
+
+=item add_product_variant(\%data)
+
+L<http://webservice.rakuten.de/documentation/method/add_product_variant>
+
+Mandatory params: C<product_art_no> (the sku) or C<product_id>,
+C<price>, C<color>, C<label>
+
+Return hashref: C<variant_id>
+
+=item add_product_variant_definition
+
+Mandatory params: C<product_art_no> (the sku) or C<product_id>
+
+Recommended: C<variant_1> Size C<variant_2> Color
+
+Return hashref: C<attribute_id>
+
+=item add_product_multi_variant
+
+Mandatory params: C<product_art_no> (the sku) or C<product_id>, C<variation1_type>, C<variation1_value>, C<price>
+
+Recommended: C<variant_art_no>
+
+Return hashref: C<variant_id>
+
+=item add_product_link
+
+Mandatory params: C<product_art_no> (the sku) or C<product_id>, C<name> (100 chars), C<url> (255 chars)
+
+Return hashref: C<link_id>
+
+=item add_product_attribute
+
+Mandatory params: C<product_art_no> (the sku) or C<product_id>, C<title> (50 chars), C<value>
+
+Return hashref: C<attribute_id>
+
 =back
 
 =cut
@@ -120,8 +174,52 @@ sub api_call {
     return Marketplace::Rakuten::Response->new(%$response);
 }
 
-sub get_key_info { shift->api_call(get  => 'misc/getKeyInfo') }
-sub add_product  { shift->api_call(post => 'products/addProduct', shift) }
+sub get_key_info {
+    my ($self, $data) = @_;
+    $self->api_call(get  => 'misc/getKeyInfo')
+}
+
+sub add_product {
+    my ($self, $data) = @_;
+    $self->api_call(post => 'products/addProduct', $data);
+}
+
+sub add_product_image {
+    my ($self, $data) = @_;
+    $self->api_call(post => 'products/addProductImage', $data);
+}
+
+sub add_product_variant {
+    my ($self, $data) = @_;
+    $self->api_call(post => 'products/addProductVariant', $data);
+}
+
+sub add_product_variant_definition {
+    my ($self, $data) = @_;
+    $self->api_call(post => 'products/addProductVariantDefinition', $data);
+}
+
+sub add_product_multi_variant {
+    my ($self, $data) = @_;
+    $self->api_call(post => 'products/addProductMultiVariant', $data);
+}
+
+sub add_product_link {
+    my ($self, $data) = @_;
+    $self->api_call(post => 'products/addProductLink', $data);
+}
+
+sub add_product_attribute {
+    my ($self, $data) = @_;
+    $self->api_call(post => 'products/addProductAttribute', $data);
+}
+
+# unclear what cross-selling is, so leaving it out.
+
+# addProductToShopCategory is referring to an unknown
+# shop_category_id, leaving it out for now.
+
+
 
 
 =head1 AUTHOR
