@@ -67,7 +67,7 @@ sub _build_data {
     my $self = shift;
     my $data;
     if (my $xml = $self->content) {
-        eval { $data = XMLin($xml, ForceArray => [ qw/error/ ]) };
+        eval { $data = XMLin($xml, ForceArray => [ qw/error order/ ]) };
         warn "Faulty xml! $@" . $xml if $@;
     }
     return $data;

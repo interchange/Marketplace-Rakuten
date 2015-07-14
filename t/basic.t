@@ -129,6 +129,7 @@ test_success(delete_product_attribute => {
                                         attribute_id => '1',
                                        }, 'success');
 
+test_success(get_orders => {} => 'success', sub { print Dumper(shift) });
 
 
 # test_failure(add_product_image => {}) # sandbox always return success

@@ -7,6 +7,7 @@ use Moo;
 use MooX::Types::MooseLike::Base qw(Str);
 use HTTP::Tiny;
 use Marketplace::Rakuten::Response;
+use Marketplace::Rakuten::Order;
 use namespace::clean;
 
 =head1 NAME
@@ -352,7 +353,83 @@ sub delete_product_attribute {
     $self->api_call(post => 'products/deleteProductAttribute', $data);
 }
 
+=head3 Orders
 
+=over 4
+
+=item get_orders(\%params)
+
+No argument is required, but you probably want to pass something like
+
+ { status => pending }
+
+See L<http://webservice.rakuten.de/documentation/method/get_orders>
+for the full list of options.
+
+The response is paginated and from here you get only the raw data.
+
+Use get_parsed_orders to get the full list of objects.
+
+=item get_parsed_orders(\%params)
+
+The hashref with the parameters is the same of C<get_orders> (which
+get called). This method takes care of the pagination and return a
+list of L<Marketplace::Rakuten::Order> objects. You can access the raw
+structures with $object->order.
+
+=item get_pending_orders
+
+Shortcut for $self->get_parsed_orders({ status => 'pending' });
+
+=cut
+
+sub get_orders {
+    my ($self, $data) = @_;
+    $self->api_call(get => 'orders/getOrders', $data);
+}
+
+sub get_pending_orders {
+    my ($self) = @_;
+    return $self->get_parsed_orders({ status => 'pending' });
+}
+
+sub get_parsed_orders {
+    my ($self, $params) = @_;
+    $params ||= {};
+    my $res = $self->get_orders($params);
+    die "Couldn't retrieve orders: " . Dumper($res->errors)
+      unless $res->is_success;
+    my $data = $res->data;
+    my @orders = $self->_parse_orders($data);
+    while ($data->{orders}->{paging}->{pages}    and
+           $data->{orders}->{paging}->{page}     and
+           $data->{orders}->{paging}->{per_page} and
+           $data->{orders}->{paging}->{pages} > $data->{orders}->{paging}->{page}) {
+        my $next_page = $data->{orders}->{paging}->{page} + 1;
+        my $per_page = $data->{orders}->{paging}->{per_page};
+        $res = $self->get_orders({
+                                  %$params,
+                                  page => $next_page,
+                                  per_page => $per_page
+                                 });
+        $data = $res->data;
+        push @orders, $self->_parse_orders($data);
+    }
+    return @orders;
+}
+
+sub _parse_orders {
+    my ($self, $struct) = @_;
+    my @out;
+    if ($struct->{orders}) {
+        if (my $orders = $struct->{orders}->{order}) {
+            foreach my $order (@$orders) {
+                push @out, Marketplace::Rakuten::Order->new(order => $order);
+            }
+        }
+    }
+    return @out;
+}
 
 =head1 AUTHOR
 
