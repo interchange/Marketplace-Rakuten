@@ -18,6 +18,11 @@ Marketplace::Rakuten - Interface to http://webservice.rakuten.de/documentation
 
 Version 0.01
 
+=head1 CATEGORIES
+
+The list of categories for the German marketplace can be downloaded from
+the L<http://api.rakuten.de/categories/csv/download>.
+
 =cut
 
 our $VERSION = '0.01';
