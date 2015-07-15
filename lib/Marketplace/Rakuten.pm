@@ -23,6 +23,9 @@ Version 0.01
 The list of categories for the German marketplace can be downloaded from
 the L<http://api.rakuten.de/categories/csv/download>.
 
+When adding or editing a product, you can pass the
+C<rakuten_category_id> to C<add_product> or C<edit_product>
+
 =cut
 
 our $VERSION = '0.01';
