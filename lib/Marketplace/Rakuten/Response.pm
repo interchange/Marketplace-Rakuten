@@ -114,4 +114,30 @@ sub errors {
     return undef;
 }
 
+=head2 error_string
+
+The errors returned as a single string.
+
+=cut
+
+sub error_string {
+    my $self = shift;
+    if (my $errors = $self->errors) {
+        my @out;
+        foreach my $err (@$errors) {
+            my @pieces;
+            foreach my $k (qw/code error help/) {
+                push @pieces, $err->{$k} if $err->{$k};
+            }
+            if (@pieces) {
+                push @out, join(' ', @pieces);
+            }
+        }
+        if (@out) {
+            return join("\n", @out) . "\n";
+        }
+    }
+    return '';
+}
+
 1;

@@ -4,7 +4,7 @@ use strict;
 use warnings;
 use utf8;
 use Data::Dumper;
-use Test::More tests => 4;
+use Test::More tests => 5;
 
 use Marketplace::Rakuten::Response;
 
@@ -103,3 +103,4 @@ is_deeply($errors, [
                      },
                     ], "Errors ok");
 
+like $res->error_string, qr/40/, "Error string ok";
