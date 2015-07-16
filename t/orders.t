@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 use utf8;
-use Test::More tests => 42;
+use Test::More tests => 45;
 use Data::Dumper;
 use Marketplace::Rakuten;
 
@@ -32,7 +32,9 @@ foreach my $method (qw/client_id gender first_name last_name address1
 my @items = $order->items;
 ok(scalar @items, "Found items");
 my $item = shift @items;
-foreach my $method (qw/quantity remote_shop_order_item price subtotal rakuten_id/) {
+foreach my $method (qw/quantity remote_shop_order_item
+                       price subtotal rakuten_id
+                       variant_id product_id canonical_sku/) {
     ok($item->$method, "Found item's $method") and diag $item->$method;
 }
 

@@ -54,11 +54,35 @@ Either the variant id or the product id. You should have store the ids
 when uploading them, so you can use this id to look the real sku up
 and store it in the accessor.
 
+=head2 variant_id
+
+The rakuten variant id
+
+=head2 product_id
+
+The rakuten product id
+
+=head2 canonical_sku
+
+Rakuten's product_art_no
+
 =cut
 
 sub rakuten_id {
     my $self = shift;
-    return $self->struct->{variant_id} || $self->struct->{product_id};
+    return $self->variant_id || $self->product_id;
+}
+
+sub variant_id {
+    return shift->struct->{variant_id};
+}
+
+sub product_id {
+    return shift->struct->{product_id};
+}
+
+sub canonical_sku {
+    return shift->struct->{product_art_no};
 }
 
 1;
