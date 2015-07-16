@@ -58,6 +58,15 @@ while importing it.
 
 has order_number => (is => 'rw', isa => Str);
 
+=head2 payment_status
+
+read-write accessor for the payment status, so the shop can set it
+while importing it.
+
+=cut
+
+has payment_status => (is => 'rw', isa => Str);
+
 =head2 can_be_imported
 
 =head2 order_status
