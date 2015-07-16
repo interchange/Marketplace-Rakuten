@@ -83,7 +83,9 @@ Check that the http status is ok and that there are no errors.
 
 sub is_success {
     my $self = shift;
-    if ($self->success && !$self->errors) {
+    if ($self->success && !$self->errors &&
+        defined($self->data->{success}) &&
+        $self->data->{success} >= 0) {
         return 1;
     }
     return 0;

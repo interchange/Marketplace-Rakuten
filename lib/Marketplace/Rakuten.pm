@@ -133,7 +133,8 @@ Mandatory params: C<product_art_no> (the sku) or C<product_id>
 
 Recommended: C<variant_1> Size C<variant_2> Color
 
-Return hashref: C<attribute_id>
+You need to call this method before trying to upload variants. The
+data returned are however just a boolean (kind of) success.
 
 =item add_product_multi_variant
 
