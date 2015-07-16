@@ -92,7 +92,7 @@ sub is_success {
 =head2 errors
 
 Return, if any, a list of hashrefs with errors. The I<expected> keys
-of each element are: C<code> C<error> C<help>
+of each element are: C<code> C<message> C<help>
 
 http://webservice.rakuten.de/documentation/howto/error
 
@@ -126,7 +126,7 @@ sub error_string {
         my @out;
         foreach my $err (@$errors) {
             my @pieces;
-            foreach my $k (qw/code error help/) {
+            foreach my $k (qw/code message help/) {
                 push @pieces, $err->{$k} if $err->{$k};
             }
             if (@pieces) {
