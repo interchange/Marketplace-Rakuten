@@ -28,6 +28,13 @@ WriteMakefile(
     },
     dist  => { COMPRESS => 'gzip -9f', SUFFIX => 'gz', },
     clean => { FILES => 'Marketplace-Rakuten-*' },
+    META_MERGE => {
+        resources => {
+            repository  => 'https://github.com/interchange/Marketplace-Rakuten.git',
+            bugtracker => 'https://github.com/interchange/Marketplace-Rakuten.git/issues',
+            IRC => 'irc://irc.freenode.net/#interchange',
+        },
+    },
 );
 
 # Local Variables:
