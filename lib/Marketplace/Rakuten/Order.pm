@@ -10,7 +10,7 @@ use Moo;
 use MooX::Types::MooseLike::Base qw(Str HashRef Int Object);
 use Marketplace::Rakuten::Order::Address;
 use Marketplace::Rakuten::Order::Item;
-
+use Marketplace::Rakuten::Utils;
 
 use namespace::clean;
 
@@ -139,7 +139,7 @@ sub _build_shipping_address {
                 $args{$k} = $billing->{$k};
             }
         }
-        return Marketplace::Rakuten::Order::Address->new(%args);
+        return $self->_address_building_routine(%args);
     }
     return;
 }
@@ -150,12 +150,20 @@ sub _build_billing_address {
     my $self = shift;
     my $billing = $self->order->{client};
     if ($billing) {
-        return Marketplace::Rakuten::Order::Address->new(%$billing);
+        return $self->_address_building_routine(%$billing);
     }
     return undef;
 }
 
 has items_ref => (is => 'lazy');
+
+sub _address_building_routine {
+    my ($self, %params) = @_;
+    my %args = %params;
+    Marketplace::Rakuten::Utils::turn_empty_hashrefs_into_empty_strings(\%args);
+    return Marketplace::Rakuten::Order::Address->new(%args);
+}
+
 
 sub _build_items_ref {
     my ($self) = @_;
@@ -164,6 +172,7 @@ sub _build_items_ref {
     if ($self->order->{items}) {
         if (my $item = $self->order->{items}->{item}) {
             if (ref($item) eq 'HASH') {
+                Marketplace::Rakuten::Utils::turn_empty_hashrefs_into_empty_strings($item);
                 push @items,
                   Marketplace::Rakuten::Order::Item
                     ->new(struct => $item,
@@ -172,6 +181,7 @@ sub _build_items_ref {
             }
             elsif (ref($item) eq 'ARRAY') {
                 foreach my $i (@$item) {
+                    Marketplace::Rakuten::Utils::turn_empty_hashrefs_into_empty_strings($i);
                     push @items,
                       Marketplace::Rakuten::Order::Item
                         ->new(struct => $i,

@@ -6,6 +6,7 @@ use warnings;
 use Moo;
 use MooX::Types::MooseLike::Base qw(Str Bool HashRef);
 use XML::LibXML::Simple qw/XMLin/;
+use Marketplace::Rakuten::Utils;
 use Data::Dumper;
 use namespace::clean;
 
@@ -70,6 +71,7 @@ sub _build_data {
         eval { $data = XMLin($xml, ForceArray => [ qw/error order/ ]) };
         warn "Faulty xml! $@" . $xml if $@;
     }
+    Marketplace::Rakuten::Utils::turn_empty_hashrefs_into_empty_strings($data);
     return $data;
 }
 
