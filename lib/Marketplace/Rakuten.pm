@@ -375,6 +375,26 @@ No argument is required, but you probably want to pass something like
 See L<http://webservice.rakuten.de/documentation/method/get_orders>
 for the full list of options.
 
+List of statuses:
+
+=over 4
+
+=item pending
+
+=item editable
+
+This is what you want to get for importing.
+
+=item shipped
+
+=item payout
+
+Order is paid. Unclear when the status switches to this one.
+
+=item cancelled
+
+=back
+
 The response is paginated and from here you get only the raw data.
 
 Use get_parsed_orders to get the full list of objects.
@@ -390,7 +410,12 @@ structures with $object->order.
 
 Shortcut for $self->get_parsed_orders({ status => 'pending' });
 
+=item get_editable_orders
+
+Shortcut for $self->get_parsed_orders({ status => 'editable' });
+
 =cut
+
 
 sub get_orders {
     my ($self, $data) = @_;
@@ -401,6 +426,12 @@ sub get_pending_orders {
     my ($self) = @_;
     return $self->get_parsed_orders({ status => 'pending' });
 }
+
+sub get_editable_orders {
+    my ($self) = @_;
+    return $self->get_parsed_orders({ status => 'editable' });
+}
+
 
 sub get_parsed_orders {
     my ($self, $params) = @_;
