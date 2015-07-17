@@ -34,7 +34,7 @@ ok(scalar @items, "Found items");
 my $item = shift @items;
 foreach my $method (qw/quantity remote_shop_order_item
                        price subtotal rakuten_id
-                       variant_id product_id canonical_sku/) {
+                       variant_id product_id sku/) {
     ok($item->$method, "Found item's $method") and diag $item->$method;
 }
 

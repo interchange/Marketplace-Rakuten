@@ -16,9 +16,6 @@ has struct => (is => 'ro', isa => HashRef);
 has merchant_order_item => (is => 'rw', isa => Str);
 has order_number => (is => 'ro', default => sub { 'unknown' });
 
-# sku apparently is not provided
-has sku => (is => 'rw', isa => Str);
-
 sub quantity {
     return shift->struct->{qty} || 0;
 }
@@ -62,9 +59,9 @@ The rakuten variant id
 
 The rakuten product id
 
-=head2 canonical_sku
+=head2 sku
 
-Rakuten's product_art_no
+Rakuten's product_art_no. This appears to map to the actual variant's sku.
 
 =cut
 
@@ -81,7 +78,7 @@ sub product_id {
     return shift->struct->{product_id};
 }
 
-sub canonical_sku {
+sub sku {
     return shift->struct->{product_art_no};
 }
 
