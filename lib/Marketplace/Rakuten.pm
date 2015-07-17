@@ -8,6 +8,7 @@ use MooX::Types::MooseLike::Base qw(Str);
 use HTTP::Tiny;
 use Marketplace::Rakuten::Response;
 use Marketplace::Rakuten::Order;
+use Marketplace::Rakuten::Utils;
 use namespace::clean;
 
 =head1 NAME
@@ -464,7 +465,9 @@ sub _parse_orders {
     if ($struct->{orders}) {
         if (my $orders = $struct->{orders}->{order}) {
             foreach my $order (@$orders) {
-                push @out, Marketplace::Rakuten::Order->new(order => $order);
+                my $struct = { %$order };
+                Marketplace::Rakuten::Utils::turn_empty_hashrefs_into_empty_strings($struct);
+                push @out, Marketplace::Rakuten::Order->new(order => $struct);
             }
         }
     }
