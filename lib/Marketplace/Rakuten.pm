@@ -17,7 +17,7 @@ Marketplace::Rakuten - Interface to http://webservice.rakuten.de/documentation
 
 =head1 VERSION
 
-Version 0.02
+Version 0.03
 
 =head1 CATEGORIES
 
@@ -29,7 +29,7 @@ C<rakuten_category_id> to C<add_product> or C<edit_product>
 
 =cut
 
-our $VERSION = '0.02';
+our $VERSION = '0.03';
 
 
 =head1 SYNOPSIS
