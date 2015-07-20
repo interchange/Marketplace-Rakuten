@@ -67,8 +67,6 @@ while importing it.
 
 has payment_status => (is => 'rw', isa => Str);
 
-=head2 can_be_imported
-
 =head2 order_status
 
 Unclear (for now) what to do here. List of statuses:
@@ -96,6 +94,10 @@ Bestellung ist ausbezahlt
 Bestellung ist storniert
 
 =back 
+
+=head2 can_be_imported
+
+It returns true if the status is pending or editable or payout.
 
 =cut
 
@@ -197,6 +199,12 @@ sub _build_items_ref {
     return \@items;
 }
 
+=head2 items
+
+Returns a list of L<Marketplace::Rakuten::Order::Item> objects.
+
+=cut
+
 sub items {
     return @{ shift->items_ref };
 }
@@ -213,21 +221,51 @@ sub _build_number_of_items {
     return $total;
 }
 
+=head2 email
+
+The billing address' email
+
+=cut
+
 sub email {
     return shift->billing_address->email;
 }
+
+=head2 first_name
+
+The billing address' first name
+
+=cut
 
 sub first_name {
     return shift->billing_address->first_name;
 }
 
+=head2 last_name
+
+The billing address' last name
+
+=cut
+
 sub last_name {
     return shift->billing_address->last_name;
 }
 
+=head2 comments
+
+The buyer's comments.
+
+=cut
+
 sub comments {
     return shift->order->{comment_client};
 }
+
+=head2 order_date
+
+Return a DateTime object with the creation time of the order.
+
+=cut
 
 sub order_date {
     my $self = shift;
@@ -239,13 +277,33 @@ sub order_date {
 
 }
 
+=head2 shipping_method
+
+It always returns nothing. The data is not provided by the remote
+service.
+
+=cut
+
 sub shipping_method {
     return;
 }
 
+=head2 shipping_cost
+
+The shipping costs of the order.
+
+=cut
+
 sub shipping_cost {
     return shift->order->{shipping} || 0;
 }
+
+=head2 subtotal
+
+Subtotal of the order, implemented as total cost minus the shipping
+cost.
+
+=cut
 
 sub subtotal {
     my $self = shift;
@@ -253,6 +311,12 @@ sub subtotal {
     my $subtotal = $self->total_cost - $self->shipping_cost;
     return sprintf('%.2f', $subtotal);
 }
+
+=head2 total_cost
+
+The total cost as provided by Rakuten.
+
+=cut
 
 sub total_cost {
     return shift->order->{total} || 0;
