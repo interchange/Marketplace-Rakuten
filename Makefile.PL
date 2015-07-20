@@ -21,7 +21,8 @@ WriteMakefile(
         'Moo' => 0,
         'namespace::clean' => 0,
         'MooX::Types::MooseLike' => 0,
-        'HTTP::Tiny' => 0,
+        # first version providing "www_form_urlencode" method
+        'HTTP::Tiny' => 0.014,
         'XML::LibXML::Simple' => 0,
         'DateTime' => 0,
         'DateTime::Format::ISO8601' => 0,
