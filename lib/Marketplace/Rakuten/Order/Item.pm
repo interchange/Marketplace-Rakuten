@@ -1,8 +1,55 @@
 package Marketplace::Rakuten::Order::Item;
 
-# items must implement sku quantity price subtotal
-# remote_shop_order_item
-# and a rw merchant_order_item
+=head1 NAME
+
+Marketplace::Rakuten::Order::Item.
+
+=head1 DESCRIPTION
+
+Class to handle the xml structures representing a orderline item.
+
+This modules doesn't do much, it just provides an uniform iterface
+with other Marketplace modules.
+
+All Markteplace::<provider>::Order::Item classes implement the
+following methods:
+
+=over 4
+
+=item sku
+
+=item quantity
+
+=item price
+
+=item subtotal
+
+=item remote_shop_order_item
+
+=item merchant_order_item 
+
+This one should be a read-write accessor, because usually Ebay doesn't
+know about it.
+
+=back 
+
+=head1 ACCESSORS
+
+=head2 struct
+
+This hashref must be passed to the constructor, containing the XML
+structure.
+
+=head2 order_number
+
+The remote_shop_order_item is returned as the concatenation of the
+Rakuten's order number, a dash, and the item id. 
+
+Defaults to 'unknown'.
+
+=head1 OTHER SHORTCUTS
+
+=cut
 
 use strict;
 use warnings;
