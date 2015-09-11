@@ -442,7 +442,10 @@ sub get_parsed_orders {
       unless $res->is_success;
     my $data = $res->data;
     my @orders = $self->_parse_orders($data);
-    while ($data->{orders}->{paging}->{pages}    and
+    # print Dumper(\@orders);
+    # print Dumper($res);
+    while ($data->{orders} and
+           $data->{orders}->{paging}->{pages}    and
            $data->{orders}->{paging}->{page}     and
            $data->{orders}->{paging}->{per_page} and
            $data->{orders}->{paging}->{pages} > $data->{orders}->{paging}->{page}) {
