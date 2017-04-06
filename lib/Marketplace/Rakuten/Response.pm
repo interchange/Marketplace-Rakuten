@@ -68,7 +68,11 @@ sub _build_data {
     my $self = shift;
     my $data;
     if (my $xml = $self->content) {
-        eval { $data = XMLin($xml, ForceArray => [ qw/error order/ ]) };
+        eval { $data = XMLin($xml,
+                             ForceArray => [ qw/error order/ ],
+                             # prevent <name> to be used as key in the structure
+                             KeyAttr => [],
+                            ) };
         warn "Faulty xml! $@" . $xml if $@;
     }
     Marketplace::Rakuten::Utils::turn_empty_hashrefs_into_empty_strings($data);
