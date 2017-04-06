@@ -1,5 +1,12 @@
 Revision history for Marketplace-Rakuten
 
+0.04 Thu Apr  6 11:49:02 2017 CEST
+
+     [BUG FIXES]
+
+     * Prevent Rakuten from using a different structure for multiple items in
+       an order (Marco Pessotto).
+
 0.03 Mon Jul 20 17:16:35 2015 CEST
 
      [DOCUMENTATION]
