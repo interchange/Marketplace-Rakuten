@@ -324,6 +324,12 @@ sub total_cost {
 
 =head2 payment_method
 
+It always returns C<Rakuten>. If you need to know exactly the
+underlaying payment method, you can check C<payment> in the C<order>
+accessor.
+
+  my $rakuten_payment = $order->order->{payment};
+
 Mapping:
 
 
@@ -345,7 +351,7 @@ Mapping:
 =cut
 
 sub payment_method {
-    return shift->order->{payment};
+    return 'Rakuten';
 }
 
 

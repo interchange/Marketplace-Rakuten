@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 use utf8;
-use Test::More tests => 12;
+use Test::More tests => 16;
 use Data::Dumper;
 use Marketplace::Rakuten::Response;
 use Marketplace::Rakuten;
@@ -220,12 +220,14 @@ foreach my $res ($sandbox, $live) {
     my @orders = Marketplace::Rakuten->_parse_orders($obj->data);
     foreach my $order (@orders) {
         ok $order->number_of_items, "Order has ".  $order->number_of_items . ' items';
+        ok $order->shipping_address->company, "Company found!";
         my @items = $order->items;
         ok (@items > 0, "Found " . scalar(@items) . " orderlines");
         foreach my $i (@items) {
             ok $i->quantity, "Item has quantity" or diag Dumper($i);
             ok $i->sku, "Item has sku";
         }
+        is $order->payment_method, 'Rakuten';
     }
 }
 
