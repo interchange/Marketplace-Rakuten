@@ -32,7 +32,7 @@ WriteMakefile(
     META_MERGE => {
         resources => {
             repository  => 'https://github.com/interchange/Marketplace-Rakuten.git',
-            bugtracker => 'https://github.com/interchange/Marketplace-Rakuten.git/issues',
+            bugtracker => 'https://github.com/interchange/Marketplace-Rakuten/issues',
             IRC => 'irc://irc.freenode.net/#interchange',
         },
     },
